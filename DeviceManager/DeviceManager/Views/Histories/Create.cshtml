@@ -1,0 +1,83 @@
+﻿@model DeviceManager.Data.Entities.History
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>History</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ItemId" class="control-label"></label>
+                <input asp-for="ItemId" class="form-control" />
+                <span asp-validation-for="ItemId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RequirementUser" class="control-label"></label>
+                <input asp-for="RequirementUser" class="form-control" />
+                <span asp-validation-for="RequirementUser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RequirementDateStart" class="control-label"></label>
+                <input asp-for="RequirementDateStart" class="form-control" />
+                <span asp-validation-for="RequirementDateStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RequirementDateEnd" class="control-label"></label>
+                <input asp-for="RequirementDateEnd" class="form-control" />
+                <span asp-validation-for="RequirementDateEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RequirementNote" class="control-label"></label>
+                <input asp-for="RequirementNote" class="form-control" />
+                <span asp-validation-for="RequirementNote" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FixedUser" class="control-label"></label>
+                <input asp-for="FixedUser" class="form-control" />
+                <span asp-validation-for="FixedUser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FixedDateStart" class="control-label"></label>
+                <input asp-for="FixedDateStart" class="form-control" />
+                <span asp-validation-for="FixedDateStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FixedDateEnd" class="control-label"></label>
+                <input asp-for="FixedDateEnd" class="form-control" />
+                <span asp-validation-for="FixedDateEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FixedNote" class="control-label"></label>
+                <input asp-for="FixedNote" class="form-control" />
+                <span asp-validation-for="FixedNote" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Result" class="control-label"></label>
+                <input asp-for="Result" class="form-control" />
+                <span asp-validation-for="Result" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
