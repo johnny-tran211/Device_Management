@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DeviceManager.Data;
 using DeviceManager.Data.Entities;
 using DeviceManager.Models;
+using DeviceManager.Enum;
 
 namespace DeviceManager.Controllers
 {
@@ -23,19 +24,21 @@ namespace DeviceManager.Controllers
         // GET: Items
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Items.Select(x => new ItemViewModel() 
-            {
-                Id = x.Id,
-                ProductName = x.ProductName,
-                Description = x.Description,
-                Type = x.Type,
-                RoomId = x.RoomId,
-                Image = x.Image,
-                BuyDate = x.BuyDate,
-                MaintainDate = x.MaintainDate,
-                MaintainTimes = x.MaintainTimes,
-                Status = x.Status,
-            }).ToListAsync());
+            return View(await _context.Items
+                .Where(c => c.Status == Status.Active.ToString())
+                .Select(x => new ItemViewModel() 
+                {
+                    Id = x.Id,
+                    ProductName = x.ProductName,
+                    Description = x.Description,
+                    Type = x.Type,
+                    RoomId = x.RoomId,
+                    Image = x.Image,
+                    BuyDate = x.BuyDate,
+                    MaintainDate = x.MaintainDate,
+                    MaintainTimes = x.MaintainTimes,
+                    Status = x.Status,
+                }).ToListAsync());
         }
 
         // GET: Items/Details/5
@@ -47,6 +50,7 @@ namespace DeviceManager.Controllers
             }
 
             var item = await _context.Items
+                .Where(c => c.Status == Status.Active.ToString())
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (item == null)
             {
@@ -67,11 +71,18 @@ namespace DeviceManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductName,Description,Type,RoomId,Image,BuyDate,MaintainDate,Status")] Item item)
+        public async Task<IActionResult> Create([Bind("Id,ProductName,Description,Type,RoomId,Image,MaintainDate")] Item item)
         {
             if (ModelState.IsValid)
             {
                 item.MaintainTimes = 0;
+                item.Status = Status.Active.ToString();
+                item.BuyDate = DateTime.Now;
+                if(item.MaintainDate < item.BuyDate)
+                {
+                    ModelState.AddModelError("MaintainDate", "MaintainDate have to after today");
+                    return View(item);
+                }
                 _context.Add(item);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -87,7 +98,9 @@ namespace DeviceManager.Controllers
                 return NotFound();
             }
 
-            var item = await _context.Items.FindAsync(id);
+            var item = await _context.Items
+                .Where(c => c.Status == Status.Active.ToString())
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (item == null)
             {
                 return NotFound();
@@ -100,7 +113,7 @@ namespace DeviceManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductName,Description,Type,RoomId,Image,BuyDate,MaintainDate,Status")] Item item)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductName,Description,Type,RoomId,Image,Status")] Item item)
         {
             if (id != item.Id)
             {
@@ -139,6 +152,7 @@ namespace DeviceManager.Controllers
             }
 
             var item = await _context.Items
+                .Where(c => c.Status == Status.Active.ToString())
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (item == null)
             {
@@ -154,7 +168,8 @@ namespace DeviceManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var item = await _context.Items.FindAsync(id);
-            _context.Items.Remove(item);
+            item.Status = Status.Disable.ToString();
+            _context.Items.Update(item);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

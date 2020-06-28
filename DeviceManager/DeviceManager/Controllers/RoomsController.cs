@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DeviceManager.Data;
 using DeviceManager.Data.Entities;
 using DeviceManager.Models;
+using DeviceManager.Enum;
 
 namespace DeviceManager.Controllers
 {
@@ -23,7 +24,9 @@ namespace DeviceManager.Controllers
         // GET: Rooms
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Rooms.Select(x => new RoomViewModel()
+            return View(await _context.Rooms
+                .Where(c => c.Status == Status.Active.ToString())
+                .Select(x => new RoomViewModel()
             {
                 Id = x.Id,
                 RoomName = x.RoomName,
@@ -40,18 +43,19 @@ namespace DeviceManager.Controllers
             }
 
             var room = await _context.Rooms
+                .Where(c => c.Status == Status.Active.ToString())
+                .Select(x => new RoomViewModel() 
+                {
+                    Id = x.Id,
+                    RoomName = x.RoomName,
+                    Status = x.Status,
+                })
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (room == null)
             {
                 return NotFound();
             }
-            var roomViewModel = new RoomViewModel()
-            {
-                Id = room.Id,
-                RoomName = room.RoomName,
-                Status = room.Status,
-            };
-            return View(roomViewModel);
+            return View(room);
         }
 
         // GET: Rooms/Create
@@ -65,10 +69,11 @@ namespace DeviceManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RoomName,Status")] Room room)
+        public async Task<IActionResult> Create([Bind("Id,RoomName")] Room room)
         {
             if (ModelState.IsValid)
             {
+                room.Status = Status.Active.ToString();
                 _context.Add(room);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -84,7 +89,9 @@ namespace DeviceManager.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await _context.Rooms
+                .Where(c => c.Status == Status.Active.ToString())
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (room == null)
             {
                 return NotFound();
@@ -136,6 +143,7 @@ namespace DeviceManager.Controllers
             }
 
             var room = await _context.Rooms
+                .Where(c => c.Status != Status.Disable.ToString())
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (room == null)
             {
@@ -151,7 +159,8 @@ namespace DeviceManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var room = await _context.Rooms.FindAsync(id);
-            _context.Rooms.Remove(room);
+            room.Status = Status.Disable.ToString();
+            _context.Rooms.Update(room);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
