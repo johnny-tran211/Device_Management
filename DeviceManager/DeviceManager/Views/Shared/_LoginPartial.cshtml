@@ -9,10 +9,9 @@
         <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
     </div>
      <div class="logout">
-         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-             <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+         <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+             <button class="button-logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
          </form>
-         <a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">Logout</a>
      </div>
 }
 else

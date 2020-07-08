@@ -12,9 +12,12 @@ using DeviceManager.Enum;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
+using DeviceManager.Services;
 
 namespace DeviceManager.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ItemsController : Controller
     {
         private readonly ApplicationDbContext _context;

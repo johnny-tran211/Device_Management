@@ -18,6 +18,7 @@ using DeviceManager.Services;
 using DeviceManager.Models;
 using Microsoft.AspNetCore.Http;
 using DeviceManager.Interface;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DeviceManager
 {
@@ -47,7 +48,8 @@ namespace DeviceManager
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
 
             services.AddDistributedMemoryCache();
-
+            services.AddAuthorization();
+            services.AddAuthentication();
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -59,6 +61,18 @@ namespace DeviceManager
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.AllowedForNewUsers = true;
             });
+
+            services.AddMvc().AddRazorPagesOptions(o => o.Conventions.AddAreaFolderRouteModelConvention("Identity", "/Account/", model =>
+            {
+                foreach (var selector in model.Selectors)
+                {
+                    var attributeRouteModel = selector.AttributeRouteModel;
+                    attributeRouteModel.Order = -1;
+                    attributeRouteModel.Template = attributeRouteModel.Template.Remove(0, "Identity".Length);
+                }
+            })
+            ).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
         }
 
 
@@ -86,10 +100,13 @@ namespace DeviceManager
             app.UseSession();
             app.UseEndpoints(endpoints =>
             {
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapRazorPages();
+                
             });
         }
     }

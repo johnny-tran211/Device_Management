@@ -76,17 +76,27 @@
                 .cover .navbar-myself .left-navbar .logout a:hover {
                     color: #0ab7eb;
                 }
-
-    /* ----------sidebar------------ */
-    .cover .sidebar {
-        background-color: white;
-        width: 15%;
-        height: 100vh;
-        box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.11);
-        padding-top: 65px;
-        position: fixed;
-        z-index: 1;
-    }
+        .logout .button-logout {
+            text-decoration: none;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 18px;
+            font-weight: 700;
+        }
+            .logout .button-logout:hover {
+                color: #0ab7eb;
+            }
+            /* ----------sidebar------------ */
+            .cover .sidebar {
+                background-color: white;
+                width: 15%;
+                height: 100vh;
+                box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.11);
+                padding-top: 65px;
+                position: fixed;
+                z-index: 1;
+            }
 
         .cover .sidebar .sub-sidebar {
             height: 100px;
