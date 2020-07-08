@@ -1,0 +1,55 @@
+﻿@model DeviceManager.Models.CartViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+@if (Model != null)
+{
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ProductId</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Room Name</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model.ListCart)
+            {
+            <tr>
+                <th scope="row">@item.ProductId</th>
+                <td>@item.ProductName</td>
+                <td>
+                    <select class="form-control">
+                        @foreach (var room in Model.ListRoom)
+                        {
+                            <option selected>@room.RoomName</option>
+                        }
+                    </select>
+                </td>
+                <td>
+                    <form asp-action="Delete">
+                        <input type="hidden" name="id" value="@item.ProductId" />
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                    </form>
+                </td>
+            </tr>
+
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h1>@ViewBag.ERRORMESSAGE</h1>
+}
+
+
+
+
+
+
+

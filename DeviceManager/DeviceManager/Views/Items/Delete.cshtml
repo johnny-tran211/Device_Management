@@ -1,0 +1,63 @@
+﻿@model DeviceManager.Data.Entities.Item
+
+@{
+    ViewData["Title"] = "Delete";
+}
+@section styles{
+    <link href="@Url.Content("~/css/editItem.css")" rel="stylesheet" type="text/css" />
+}
+<h1 class="top">Delete</h1>
+
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col"> Value</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.ProductName)</th>
+            <td> @Html.DisplayFor(model => model.ProductName)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.Description)</th>
+            <td> @Html.DisplayFor(model => model.Description)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.Type)</th>
+            <td> @Html.DisplayFor(model => model.Type)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.RoomId)</th>
+            <td> @Html.DisplayFor(model => model.RoomId)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.Image)</th>
+            <td> @Html.DisplayFor(model => model.Image)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.BuyDate)</th>
+            <td> @Html.DisplayFor(model => model.BuyDate)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.MaintainDate)</th>
+            <td> @Html.DisplayFor(model => model.MaintainDate)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.MaintainTimes)</th>
+            <td> @Html.DisplayFor(model => model.MaintainTimes)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.Status)</th>
+            <td> @Html.DisplayFor(model => model.Status)</td>
+        </tr>
+    </tbody>
+</table>
+
+<form style="margin-bottom: 50px;" asp-action="Delete">
+    <input type="hidden" asp-for="ItemId" />
+    <input type="submit" value="Delete" class="btn btn-danger" /> |
+    <a asp-action="Index">Back to List</a>
+</form>

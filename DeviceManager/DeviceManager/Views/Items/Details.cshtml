@@ -1,0 +1,60 @@
+﻿@model DeviceManager.Data.Entities.Item
+
+@{
+    ViewData["Title"] = "Details";
+}
+@section styles{
+    <link href="@Url.Content("~/css/editItem.css")" rel="stylesheet" type="text/css" />
+}
+<h1 class="top">Details</h1>
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col"> Value</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.ProductName)</th>
+            <td> @Html.DisplayFor(model => model.ProductName)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.Description)</th>
+            <td> @Html.DisplayFor(model => model.Description)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.Type)</th>
+            <td> @Html.DisplayFor(model => model.Type)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.RoomId)</th>
+            <td> @Html.DisplayFor(model => model.RoomId)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.Image)</th>
+            <td> @Html.DisplayFor(model => model.Image)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.BuyDate)</th>
+            <td> @Html.DisplayFor(model => model.BuyDate)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.MaintainDate)</th>
+            <td> @Html.DisplayFor(model => model.MaintainDate)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.MaintainTimes)</th>
+            <td> @Html.DisplayFor(model => model.MaintainTimes)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(model => model.Status)</th>
+            <td> @Html.DisplayFor(model => model.Status)</td>
+        </tr>
+    </tbody>
+</table>
+<div style="margin-bottom: 50px">
+    <a asp-action="Edit" asp-route-id="@Model.ItemId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
