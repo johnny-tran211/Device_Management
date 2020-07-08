@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DeviceManager.Data.Migrations
+namespace DeviceManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -21,7 +21,7 @@ namespace DeviceManager.Data.Migrations
 
             modelBuilder.Entity("DeviceManager.Data.Entities.History", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("HistoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -65,14 +65,14 @@ namespace DeviceManager.Data.Migrations
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
-                    b.HasKey("Id");
+                    b.HasKey("HistoryId");
 
                     b.ToTable("Histories");
                 });
 
             modelBuilder.Entity("DeviceManager.Data.Entities.Item", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ItemId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -81,12 +81,13 @@ namespace DeviceManager.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("Image")
                         .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(250);
 
                     b.Property<DateTime>("MaintainDate")
                         .HasColumnType("datetime2");
@@ -95,6 +96,7 @@ namespace DeviceManager.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ProductName")
+                        .IsRequired()
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
@@ -106,22 +108,26 @@ namespace DeviceManager.Data.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
-                    b.HasKey("Id");
+                    b.HasKey("ItemId");
+
+                    b.HasIndex("RoomId");
 
                     b.ToTable("Items");
                 });
 
             modelBuilder.Entity("DeviceManager.Data.Entities.Room", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("RoomId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("RoomName")
+                        .IsRequired()
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
@@ -129,7 +135,7 @@ namespace DeviceManager.Data.Migrations
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
-                    b.HasKey("Id");
+                    b.HasKey("RoomId");
 
                     b.ToTable("Rooms");
                 });
@@ -157,7 +163,9 @@ namespace DeviceManager.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -283,12 +291,10 @@ namespace DeviceManager.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -325,12 +331,10 @@ namespace DeviceManager.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -338,6 +342,15 @@ namespace DeviceManager.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("DeviceManager.Data.Entities.Item", b =>
+                {
+                    b.HasOne("DeviceManager.Data.Entities.Room", "Room")
+                        .WithMany("Items")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

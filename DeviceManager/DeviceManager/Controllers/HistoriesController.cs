@@ -25,7 +25,7 @@ namespace DeviceManager.Controllers
         {
             return View(await _context.Histories.Select(x => new HistoryViewModel() 
             { 
-                Id = x.Id,
+                Id = x.HistoryId,
                 ItemId = x.ItemId,
                 RequirementUser = x.RequirementUser,
                 RequirementDateStart = x.RequirementDateStart,
@@ -49,7 +49,7 @@ namespace DeviceManager.Controllers
             }
 
             var history = await _context.Histories
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.HistoryId == id);
             if (history == null)
             {
                 return NotFound();
@@ -69,7 +69,7 @@ namespace DeviceManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ItemId,RequirementUser,RequirementDateStart,RequirementDateEnd,RequirementNote,FixedUser,FixedDateStart,FixedDateEnd,FixedNote,Result,Status")] History history)
+        public async Task<IActionResult> Create([Bind("HistoryId,ItemId,RequirementUser,RequirementDateStart,RequirementDateEnd,RequirementNote,FixedUser,FixedDateStart,FixedDateEnd,FixedNote,Result,Status")] History history)
         {
             if (ModelState.IsValid)
             {
@@ -101,9 +101,9 @@ namespace DeviceManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ItemId,RequirementUser,RequirementDateStart,RequirementDateEnd,RequirementNote,FixedUser,FixedDateStart,FixedDateEnd,FixedNote,Result,Status")] History history)
+        public async Task<IActionResult> Edit(int id, [Bind("HistoryId,ItemId,RequirementUser,RequirementDateStart,RequirementDateEnd,RequirementNote,FixedUser,FixedDateStart,FixedDateEnd,FixedNote,Result,Status")] History history)
         {
-            if (id != history.Id)
+            if (id != history.HistoryId)
             {
                 return NotFound();
             }
@@ -117,7 +117,7 @@ namespace DeviceManager.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!HistoryExists(history.Id))
+                    if (!HistoryExists(history.HistoryId))
                     {
                         return NotFound();
                     }
@@ -140,7 +140,7 @@ namespace DeviceManager.Controllers
             }
 
             var history = await _context.Histories
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.HistoryId == id);
             if (history == null)
             {
                 return NotFound();
@@ -162,7 +162,7 @@ namespace DeviceManager.Controllers
 
         private bool HistoryExists(int id)
         {
-            return _context.Histories.Any(e => e.Id == id);
+            return _context.Histories.Any(e => e.HistoryId == id);
         }
     }
 }

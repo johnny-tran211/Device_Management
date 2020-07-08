@@ -9,6 +9,9 @@ using DeviceManager.Data;
 using DeviceManager.Data.Entities;
 using DeviceManager.Models;
 using DeviceManager.Enum;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace DeviceManager.Controllers
 {
@@ -26,9 +29,9 @@ namespace DeviceManager.Controllers
         {
             return View(await _context.Items
                 .Where(c => c.Status == Status.Active.ToString())
-                .Select(x => new ItemViewModel() 
+                .Select(x => new ItemViewModel()
                 {
-                    Id = x.Id,
+                    Id = x.ItemId,
                     ProductName = x.ProductName,
                     Description = x.Description,
                     Type = x.Type,
@@ -38,6 +41,7 @@ namespace DeviceManager.Controllers
                     MaintainDate = x.MaintainDate,
                     MaintainTimes = x.MaintainTimes,
                     Status = x.Status,
+                    Room = x.Room,
                 }).ToListAsync());
         }
 
@@ -51,7 +55,7 @@ namespace DeviceManager.Controllers
 
             var item = await _context.Items
                 .Where(c => c.Status == Status.Active.ToString())
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.ItemId == id);
             if (item == null)
             {
                 return NotFound();
@@ -63,6 +67,13 @@ namespace DeviceManager.Controllers
         // GET: Items/Create
         public IActionResult Create()
         {
+
+            HttpContext.Session.SetString("ROOMS", JsonConvert.SerializeObject(
+                _context.Rooms.Where(c => c.Status == "Active").Select(x => new RoomViewModel()
+                {
+                    Id = x.RoomId,
+                    RoomName = x.RoomName,
+                }).ToList()));
             return View();
         }
 
@@ -71,15 +82,29 @@ namespace DeviceManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductName,Description,Type,RoomId,Image,MaintainDate")] Item item)
+        public async Task<IActionResult> Create([Bind("ItemId,ProductName,Description,Type,RoomId,Image,MaintainDate")] Item item)
         {
+            if (_context.Rooms.Where(x => x.RoomId == item.RoomId).Count() == 0)
+            {
+                ModelState.AddModelError("RoomId", "Room not found");
+                return View(item);
+            }
             if (ModelState.IsValid)
             {
                 item.MaintainTimes = 0;
                 item.Status = Status.Active.ToString();
                 item.BuyDate = DateTime.Now;
-                if(item.MaintainDate < item.BuyDate)
+                if (item.MaintainDate < item.BuyDate)
                 {
+                    if (HttpContext.Session.GetString("ROOMS") == null)
+                    {
+                        HttpContext.Session.SetString("ROOMS", JsonConvert.SerializeObject(
+                           _context.Rooms.Where(c => c.Status == "Active").Select(x => new RoomViewModel()
+                           {
+                               Id = x.RoomId,
+                               RoomName = x.RoomName,
+                           }).ToList()));
+                    }
                     ModelState.AddModelError("MaintainDate", "MaintainDate have to after today");
                     return View(item);
                 }
@@ -100,7 +125,7 @@ namespace DeviceManager.Controllers
 
             var item = await _context.Items
                 .Where(c => c.Status == Status.Active.ToString())
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.ItemId == id);
             if (item == null)
             {
                 return NotFound();
@@ -113,9 +138,9 @@ namespace DeviceManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductName,Description,Type,RoomId,Image,Status")] Item item)
+        public async Task<IActionResult> Edit(int id, [Bind("ItemId,ProductName,Description,Type,RoomId,Image,Status")] Item item)
         {
-            if (id != item.Id)
+            if (id != item.ItemId)
             {
                 return NotFound();
             }
@@ -129,7 +154,7 @@ namespace DeviceManager.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ItemExists(item.Id))
+                    if (!ItemExists(item.ItemId))
                     {
                         return NotFound();
                     }
@@ -153,7 +178,7 @@ namespace DeviceManager.Controllers
 
             var item = await _context.Items
                 .Where(c => c.Status == Status.Active.ToString())
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.ItemId == id);
             if (item == null)
             {
                 return NotFound();
@@ -176,7 +201,7 @@ namespace DeviceManager.Controllers
 
         private bool ItemExists(int id)
         {
-            return _context.Items.Any(e => e.Id == id);
+            return _context.Items.Any(e => e.ItemId == id);
         }
     }
 }

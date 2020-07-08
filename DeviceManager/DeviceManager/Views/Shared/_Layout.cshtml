@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/index.css" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/css/solid.min.css" />
+    <link rel="stylesheet" href="~/css/solid.min.css" />
 </head>
 <body class="body-change">
     <div class="cover">
@@ -26,7 +29,7 @@
             <a class="sub-sidebar" asp-controller="Home" asp-action="Index">Home</a>
             <a class="sub-sidebar" asp-controller="Items" asp-action="Index">Items</a>
             <a class="sub-sidebar" asp-controller="Rooms" asp-action="Index">Room</a>
-
+            <a class="sub-sidebar" asp-controller="Cart" asp-action="Index">Cart</a>
         </div>
         <!-- -----body-------- -->
         <div class="content">
@@ -38,6 +41,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
     @RenderSection("Scripts", required: false)
+    @RenderSection("styles", false);
 </body>
 </html>

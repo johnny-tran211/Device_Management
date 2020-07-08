@@ -11,14 +11,16 @@ namespace DeviceManager.Data.Entities
     public class Room
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int RoomId { get; set; }
 
-        [MaxLength(50)]
+        [Required]
+        [MaxLength(50, ErrorMessage = "RoomName has less than 50 characters")]
         [Column(TypeName = "varchar(50)")]
         public string RoomName { get; set; }
 
         [MaxLength(50)]
         [Column(TypeName = "varchar(50)")]
         public string Status { get; set; }
+        public List<Item> Items { get; set; }
     }
 }

@@ -1,0 +1,27 @@
+﻿.row-edit{
+    justify-content: center;
+}
+label{
+    font-weight: bold;
+}
+.icon-edit {
+    font-style: normal;
+    font-size: 20px;
+    color: black;
+    transition: all 0.3s ease-in-out; 
+}
+.icon-color-red:hover{
+    color: red;
+}
+.icon-color-green:hover{
+    color:forestgreen;
+}
+.icon-color-blue:hover{
+    color: dodgerblue;
+}
+.icon-color-yellow:hover {
+    color: yellow;
+}
+.top{
+    margin-top: 50px;
+}

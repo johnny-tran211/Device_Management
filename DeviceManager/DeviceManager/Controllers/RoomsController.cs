@@ -28,7 +28,7 @@ namespace DeviceManager.Controllers
                 .Where(c => c.Status == Status.Active.ToString())
                 .Select(x => new RoomViewModel()
             {
-                Id = x.Id,
+                Id = x.RoomId,
                 RoomName = x.RoomName,
                 Status = x.Status,
             }).ToListAsync());
@@ -46,7 +46,7 @@ namespace DeviceManager.Controllers
                 .Where(c => c.Status == Status.Active.ToString())
                 .Select(x => new RoomViewModel() 
                 {
-                    Id = x.Id,
+                    Id = x.RoomId,
                     RoomName = x.RoomName,
                     Status = x.Status,
                 })
@@ -69,7 +69,7 @@ namespace DeviceManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RoomName")] Room room)
+        public async Task<IActionResult> Create([Bind("RoomId,RoomName")] Room room)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace DeviceManager.Controllers
 
             var room = await _context.Rooms
                 .Where(c => c.Status == Status.Active.ToString())
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.RoomId == id);
             if (room == null)
             {
                 return NotFound();
@@ -106,7 +106,7 @@ namespace DeviceManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,RoomName,Status")] Room room)
         {
-            if (id != room.Id)
+            if (id != room.RoomId)
             {
                 return NotFound();
             }
@@ -120,7 +120,7 @@ namespace DeviceManager.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RoomExists(room.Id))
+                    if (!RoomExists(room.RoomId))
                     {
                         return NotFound();
                     }
@@ -144,7 +144,7 @@ namespace DeviceManager.Controllers
 
             var room = await _context.Rooms
                 .Where(c => c.Status != Status.Disable.ToString())
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.RoomId == id);
             if (room == null)
             {
                 return NotFound();
@@ -167,7 +167,7 @@ namespace DeviceManager.Controllers
 
         private bool RoomExists(int id)
         {
-            return _context.Rooms.Any(e => e.Id == id);
+            return _context.Rooms.Any(e => e.RoomId == id);
         }
     }
 }

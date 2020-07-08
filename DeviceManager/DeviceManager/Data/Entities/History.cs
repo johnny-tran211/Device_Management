@@ -10,7 +10,7 @@ namespace DeviceManager.Data.Entities
     public class History
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int HistoryId { get; set; }
 
         public int ItemId { get; set; }
 
@@ -44,7 +44,5 @@ namespace DeviceManager.Data.Entities
         [MaxLength(50)]
         [Column(TypeName = "varchar(50)")]
         public string Status { get; set; }
-
-
     }
 }

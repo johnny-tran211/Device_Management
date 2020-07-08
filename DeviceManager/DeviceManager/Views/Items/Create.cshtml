@@ -1,46 +1,60 @@
 ﻿@model DeviceManager.Data.Entities.Item
+@using Microsoft.AspNetCore.Http
 
+@inject IHttpContextAccessor HttpContextAccessor
 @{
     ViewData["Title"] = "Create";
 }
-
-<h1>Create</h1>
-
-<h4>Item</h4>
+@section styles{
+    <link href="@Url.Content("~/css/editItem.css")" rel="stylesheet" type="text/css" />
+}
+<h1 class="top">Create Item</h1>
 <hr />
-<div class="row">
+@{
+ }
+<div class="row row-edit">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ProductName" class="control-label"></label>
-                <input asp-for="ProductName" class="form-control" />
-                <span asp-validation-for="ProductName" class="text-danger"></span>
+                <label asp-for="@Model.ProductName" class="control-label"></label>
+                <input asp-for="@Model.ProductName" class="form-control" />
+                <span asp-validation-for="@Model.ProductName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="@Model.Description" class="control-label"></label>
+                <input asp-for="@Model.Description" class="form-control" />
+                <span asp-validation-for="@Model.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
-                <input asp-for="Type" class="form-control" />
-                <span asp-validation-for="Type" class="text-danger"></span>
+                <label asp-for="@Model.Type" class="control-label"></label>
+                <input asp-for="@Model.Type" class="form-control" />
+                <span asp-validation-for="@Model.Type" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RoomId" class="control-label"></label>
-                <input asp-for="RoomId" class="form-control" />
-                <span asp-validation-for="RoomId" class="text-danger"></span>
+                <label asp-for="@Model.RoomId" class="control-label"></label>
+                <select class="form-control" asp-for="@Model.RoomId">
+                    @{
+                        List<RoomViewModel> session = Newtonsoft.Json.JsonConvert.DeserializeObject<List<RoomViewModel>>(HttpContextAccessor.HttpContext.Session.GetString("ROOMS"));
+                        foreach (var sess in session)
+                        {
+                              <option selected value="@sess.Id">@sess.RoomName</option>
+                        }
+                    }
+                </select>
+
+
+                <span asp-validation-for="@Model.RoomId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" class="form-control" />
-                <span asp-validation-for="Image" class="text-danger"></span>
+                <label asp-for="@Model.Image" class="control-label"></label>
+                <input asp-for="@Model.Image" class="form-control" />
+                <span asp-validation-for="@Model.Image" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MaintainDate" class="control-label"></label>
-                <input asp-for="MaintainDate" class="form-control" />
-                <span asp-validation-for="MaintainDate" class="text-danger"></span>
+                <label asp-for="@Model.MaintainDate" class="control-label"></label>
+                <input asp-for="@Model.MaintainDate" class="form-control" />
+                <span asp-validation-for="@Model.MaintainDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -49,7 +63,7 @@
     </div>
 </div>
 
-<div>
+<div style="margin-bottom: 50px;">
     <a asp-action="Index">Back to List</a>
 </div>
 
