@@ -19,6 +19,8 @@ using DeviceManager.Models;
 using Microsoft.AspNetCore.Http;
 using DeviceManager.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace DeviceManager
 {
@@ -39,6 +41,7 @@ namespace DeviceManager
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
             services.AddControllersWithViews();
@@ -103,7 +106,7 @@ namespace DeviceManager
 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=CustomerIndex}/{action=Index}/{id?}");
 
                 endpoints.MapRazorPages();
                 
