@@ -84,11 +84,15 @@ namespace DeviceManager.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
-                }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (await _userManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        return LocalRedirect(Url.Content("~/Home"));
+                    }
+                    else
+                    {
+                        return LocalRedirect(Url.Content(returnUrl));
+                    }
                 }
                 if (result.IsLockedOut)
                 {

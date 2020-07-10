@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using DeviceManager.Data;
 using DeviceManager.Data.Entities;
 using DeviceManager.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DeviceManager.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class HistoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

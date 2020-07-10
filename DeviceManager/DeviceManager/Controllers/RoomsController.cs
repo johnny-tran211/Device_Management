@@ -9,9 +9,11 @@ using DeviceManager.Data;
 using DeviceManager.Data.Entities;
 using DeviceManager.Models;
 using DeviceManager.Enum;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DeviceManager.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RoomsController : Controller
     {
         private readonly ApplicationDbContext _context;

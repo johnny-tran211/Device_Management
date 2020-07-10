@@ -65,6 +65,9 @@ namespace DeviceManager.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
             public string Name { get; set; }
+            [Required]
+            [Display(Name = "FullName")]
+            public string FullName { get; set; }
         }
 
         public void OnGetAsync(string returnUrl = null)
@@ -75,12 +78,12 @@ namespace DeviceManager.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl = returnUrl ?? Url.Content("~/Account/Login");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 var role =  _roleManager.FindByIdAsync(Input.Name).Result;
-                var user = new User { UserName = Input.Email, Email = Input.Email };
+                var user = new User { UserName = Input.Email, Email = Input.Email, FullName = Input.FullName, Dob = DateTime.Now };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -106,13 +109,14 @@ namespace DeviceManager.Areas.Identity.Pages.Account
                     //    await _signInManager.SignInAsync(user, isPersistent: false);
                     //    return LocalRedirect(returnUrl);
                     //}
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+                ViewData["roles"] = _roleManager.Roles.ToList();
             }
 
             // If we got this far, something failed, redisplay form

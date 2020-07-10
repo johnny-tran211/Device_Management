@@ -85,7 +85,7 @@ namespace DeviceManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ItemId,ProductName,Description,Type,RoomId,Image,MaintainDate")] Item item)
+        public async Task<IActionResult> Create([Bind("ItemId,ProductName,Description,Type,RoomId,Image,MaintainDate,Price,DiscountPrice")] Item item)
         {
             if (_context.Rooms.Where(x => x.RoomId == item.RoomId).Count() == 0)
             {
@@ -141,7 +141,7 @@ namespace DeviceManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ItemId,ProductName,Description,Type,RoomId,Image,Status")] Item item)
+        public async Task<IActionResult> Edit(int id, [Bind("ItemId,ProductName,Description,Type,RoomId,Image,Price,DiscountPrice,Status")] Item item)
         {
             if (id != item.ItemId)
             {

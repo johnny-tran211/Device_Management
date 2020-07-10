@@ -115,7 +115,6 @@ a {
 	outline: none !important;
 	-webkit-transition: all .3s ease-in-out;
 	-moz-transition: all .3s ease-in-out;
-	-ms-transition: all .3s ease-in-out;
 	-o-transition: all .3s ease-in-out;
 	transition: all .3s ease-in-out;
 }
@@ -199,7 +198,6 @@ a,
 	outline: none !important;
 	-webkit-transition: all .3s ease-in-out;
 	-moz-transition: all .3s ease-in-out;
-	-ms-transition: all .3s ease-in-out;
 	-o-transition: all .3s ease-in-out;
 	transition: all .3s ease-in-out;
 }
@@ -577,10 +575,7 @@ a:focus {
 	-moz-animation-duration: 2s;
 	-moz-animation-iteration-count: infinite;
 	-moz-animation-timing-function: linear;
-	-ms-animation-name: rotate;
-	-ms-animation-duration: 5s;
-	-ms-animation-iteration-count: infinite;
-	-ms-animation-timing-function: linear;
+
 	-o-animation-name: rotate;
 	-o-animation-duration: 2s;
 	-o-animation-iteration-count: infinite;
@@ -821,10 +816,7 @@ hr.dottad_border {
 	-moz-animation-duration: 2s;
 	-moz-animation-iteration-count: infinite;
 	-moz-animation-timing-function: linear;
-	-ms-animation-name: rotatey;
-	-ms-animation-duration: 2s;
-	-ms-animation-iteration-count: infinite;
-	-ms-animation-timing-function: linear;
+
 	-o-animation-name: rotatey;
 	-o-animation-duration: 2s;
 	-o-animation-iteration-count: infinite;
@@ -890,7 +882,22 @@ hr.dottad_border {
 
 
 /*----- Header Top -----*/
-
+.button-logout {
+	padding: 15px 18px;
+	font-size: 14px;
+	color: #000;
+	font-weight: 600;
+	font-family: 'Raleway', sans-serif;
+	text-transform: uppercase;
+	text-decoration: none;
+	border: none;
+	outline: none;
+	background-color: transparent;
+	transition: all .25s ease;
+}
+.button-logout:hover {
+	color: #039EE3;
+}
 header {
 	position: relative;
 	z-index: 1;
@@ -1581,7 +1588,7 @@ body.light_blue #full_slider.full_slider_inner {
 	-------------------------------------------------------------------*/
 
 .padding_layout_1 {
-	padding-top: 120px;
+	padding-top: 20px;
 	padding-bottom: 115px;
 }
 
@@ -3478,7 +3485,7 @@ footer ul.social_icons {
 
 .gross_layout::after {
 	position: absolute;
-	background: url(../image/dark_bg_img.png);
+	background-image: url(../../image/dark_bg_img.png);
 	width: 35%;
 	height: 100%;
 	right: 0;
@@ -3503,7 +3510,7 @@ footer ul.social_icons {
 
 .gross_layout.right_gross_layout::after {
 	position: absolute;
-	background: url(../image/dark_bg_img2.png);
+	background-image: url(../../image/dark_bg_img.png);
 	width: 35%;
 	height: 100%;
 	left: 0;
@@ -3611,7 +3618,7 @@ footer ul.social_icons {
 }
 
 .inner_banner_section {
-	background: url('../images/it_service/inner_page_banner.jpg');
+	background-image: url('../images/it_service/inner_page_banner.jpg');
 	min-height: 245px;
 	background-size: cover;
 	background-position: center center;

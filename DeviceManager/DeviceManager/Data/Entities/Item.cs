@@ -38,6 +38,9 @@ namespace DeviceManager.Data.Entities
         public DateTime MaintainDate { get; set; }
 
         public int MaintainTimes { get; set; }
+        [Required]
+        public double Price { get; set; }
+        public double DiscountPrice { get; set; }
 
         [MaxLength(50)]
         [Column(TypeName = "varchar(50)")]

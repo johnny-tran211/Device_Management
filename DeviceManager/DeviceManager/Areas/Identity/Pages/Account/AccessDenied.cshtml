@@ -1,10 +1,22 @@
 ﻿@page
 @model AccessDeniedModel
 @{
-    ViewData["Title"] = "Access denied";
+    Layout = "";
 }
-
 <header>
-    <h1 class="text-danger">@ViewData["Title"]</h1>
-    <p class="text-danger">You do not have access to this resource.</p>
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:700" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="~/css/not-found.css" />
+
 </header>
+<div id="notfound">
+    <div class="notfound">
+        <div class="notfound-bg">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <h1>oops!</h1>
+        <h2>403 FORBIDDEN : You don't have permission to access this area</h2>
+        <a asp-controller="CustomerIndex" asp-action="Index">go back</a>
+    </div>
+</div>
