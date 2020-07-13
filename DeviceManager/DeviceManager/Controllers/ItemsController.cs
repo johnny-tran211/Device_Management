@@ -38,13 +38,11 @@ namespace DeviceManager.Controllers
                     ProductName = x.ProductName,
                     Description = x.Description,
                     Type = x.Type,
-                    RoomId = x.RoomId,
                     Image = x.Image,
                     BuyDate = x.BuyDate,
                     MaintainDate = x.MaintainDate,
                     MaintainTimes = x.MaintainTimes,
                     Status = x.Status,
-                    Room = x.Room,
                 }).ToListAsync());
         }
 
@@ -70,13 +68,6 @@ namespace DeviceManager.Controllers
         // GET: Items/Create
         public IActionResult Create()
         {
-
-            HttpContext.Session.SetString("ROOMS", JsonConvert.SerializeObject(
-                _context.Rooms.Where(c => c.Status == "Active").Select(x => new RoomViewModel()
-                {
-                    Id = x.RoomId,
-                    RoomName = x.RoomName,
-                }).ToList()));
             return View();
         }
 
@@ -85,13 +76,8 @@ namespace DeviceManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ItemId,ProductName,Description,Type,RoomId,Image,MaintainDate,Price,DiscountPrice")] Item item)
+        public async Task<IActionResult> Create([Bind("ItemId,ProductName,Description,Type,Image,MaintainDate,Price,DiscountPrice,Quantiy")] Item item)
         {
-            if (_context.Rooms.Where(x => x.RoomId == item.RoomId).Count() == 0)
-            {
-                ModelState.AddModelError("RoomId", "Room not found");
-                return View(item);
-            }
             if (ModelState.IsValid)
             {
                 item.MaintainTimes = 0;
@@ -99,20 +85,19 @@ namespace DeviceManager.Controllers
                 item.BuyDate = DateTime.Now;
                 if (item.MaintainDate < item.BuyDate)
                 {
-                    if (HttpContext.Session.GetString("ROOMS") == null)
-                    {
-                        HttpContext.Session.SetString("ROOMS", JsonConvert.SerializeObject(
-                           _context.Rooms.Where(c => c.Status == "Active").Select(x => new RoomViewModel()
-                           {
-                               Id = x.RoomId,
-                               RoomName = x.RoomName,
-                           }).ToList()));
-                    }
                     ModelState.AddModelError("MaintainDate", "MaintainDate have to after today");
                     return View(item);
                 }
-                _context.Add(item);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Add(item);
+                    var result = await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    ModelState.AddModelError(string.Empty, "ItemName is duplicated !!!");
+                    return View(item);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(item);
@@ -141,7 +126,7 @@ namespace DeviceManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ItemId,ProductName,Description,Type,RoomId,Image,Price,DiscountPrice,Status")] Item item)
+        public async Task<IActionResult> Edit(int id, [Bind("ItemId,ProductName,Description,Type,Image,Price,DiscountPrice,Status,Quantity")] Item item)
         {
             if (id != item.ItemId)
             {

@@ -1012,7 +1012,14 @@ header .right_bt .btn {
 
 
 /*----- Menu -----*/
-
+.username {
+	text-align: center;
+	font-size: 25px;
+	font-weight: 600;
+}
+	.username a {
+		color: #17a5e9;
+	}
 .menu_side {
 	float: right;
 	width: auto;
@@ -2262,14 +2269,14 @@ span.skill {
 
 /**== Pagination ==**/
 
-.pagination>li>a,
-.pagination>li>span {
+.pagination > li > a,
+.pagination > li > span {
 	position: relative;
 	float: left;
 	padding: 6px 12px;
 	margin-left: 0;
 	line-height: normal;
-	color: #000000;
+	color: #17a5e9;
 	background-color: #fff;
 	border: solid #e1e1e1 1px;
 	border-radius: 0;
@@ -3107,7 +3114,7 @@ span.skill {
 	-------------------------------------------------------------------*/
 
 .product_list {
-	min-height: 400px;
+	min-height: 450px;
 	transition: ease all 0.5s;
 }
 
@@ -3148,7 +3155,7 @@ span.skill {
 
 .product_list:hover .starratin,
 .product_list:focus .starratin {
-	height: 15px;
+	height: 35px;
 	margin-bottom: 6px;
 }
 
@@ -3205,6 +3212,7 @@ span.skill {
 	display: flex;
 	justify-content: center;
 }
+
 
 
 /*------------------------------------------------------------------
@@ -3618,7 +3626,7 @@ footer ul.social_icons {
 }
 
 .inner_banner_section {
-	background-image: url('../images/it_service/inner_page_banner.jpg');
+	background-image: url('../../image/inner_page_banner.jpg');
 	min-height: 245px;
 	background-size: cover;
 	background-position: center center;

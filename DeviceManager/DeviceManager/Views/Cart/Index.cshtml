@@ -1,55 +1,108 @@
-﻿@model DeviceManager.Models.CartViewModel
+﻿@model List<DeviceManager.Models.Cart>
 
 @{
-    ViewData["Title"] = "Index";
+    Layout = "/Views/Shared/_UserLayout.cshtml";
+    double totalPrice = 0;
+    double shipFee = 5;
 }
 
 
-@if (Model != null)
-{
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">ProductId</th>
-                <th scope="col">Product Name</th>
-                <th scope="col">Room Name</th>
-                <th scope="col">Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var item in Model.ListCart)
-            {
-            <tr>
-                <th scope="row">@item.ProductId</th>
-                <td>@item.ProductName</td>
-                <td>
-                    <select class="form-control">
-                        @foreach (var room in Model.ListRoom)
-                        {
-                            <option selected>@room.RoomName</option>
-                        }
-                    </select>
-                </td>
-                <td>
-                    <form asp-action="Delete">
-                        <input type="hidden" name="id" value="@item.ProductId" />
-                        <input type="submit" value="Delete" class="btn btn-danger" />
-                    </form>
-                </td>
-            </tr>
+    <div class="section padding_layout_1 Shopping_cart_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    @if (Model != null)
+                    {
+                        <div class="product-table">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Product Name</th>
+                                        <th>Quantity</th>
+                                        <th class="text-center">Price</th>
+                                        <th class="text-center">Total</th>
+                                        <th> </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        
+                                        <tr>
+                                            <td class="col-sm-8 col-md-6">
+                                                <div class="media">
+                                                    <a class="thumbnail pull-left" href="#"> <img class="media-object" src="~/image/@item.Item.Image" alt="#"></a>
+                                                    <div class="media-body">
+                                                        <h4 class="media-heading"><a href="#">@item.Item.ProductName</a></h4>
+                                                        <span>Status: </span><span class="text-success">In Stock</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="col-sm-1 col-md-1 text-center"><p class="price_table">@item.Quantity</p></td>
+                                            <td class="col-sm-1 col-md-1 text-center"><p class="price_table">$@item.Item.Price</p></td>
+                                            <td class="col-sm-1 col-md-1 text-center">
+                                                @{ 
+                                                    var total = item.Quantity * item.Item.Price;
+                                                    totalPrice += total;    
+                                                }
+                                                <p class="price_table">
+                                                    $@total
+                                                </p>
+                                            </td>
+                                            <td class="col-sm-1 col-md-1">
+                                                <form asp-action="Delete" method="post">
+                                                    <input type="hidden" name="id" value="@item.Item.Id" />
+                                                    <button type="submit" class="bt_main"><i class="fa fa-trash"></i> Remove</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <table class="table">
+                                <tbody>
+                                    <tr class="cart-form">
+                                        <td class="actions">
+                                            <input class="button" name="update_cart" value="Update cart" disabled="" type="submit">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="shopping-cart-cart">
+                            <table>
+                                <tbody>
 
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <h1>@ViewBag.ERRORMESSAGE</h1>
-}
-
-
-
-
-
-
-
+                                    <tr class="head-table">
+                                        <td><h5>Cart Totals</h5></td>
+                                        <td class="text-right"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><h4>Subtotal</h4></td>
+                                        <td class="text-right"><h4>$@totalPrice</h4></td>
+                                    </tr>
+                                    <tr>
+                                        <td><h5>Estimated shipping</h5></td>
+                                        <td class="text-right"><h4>$@shipFee</h4></td>
+                                    </tr>
+                                    <tr>
+                                        <td><h3>Total</h3></td>
+                                        @{ totalPrice += shipFee; }
+                                        <td class="text-right"><h4>$@totalPrice</h4></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a asp-action="Index" asp-controller="CustomerIndex" class="button">Continue Shopping</a></td>
+                                        <td><button class="button">Checkout</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <h1>@ViewBag.ERRORMESSAGE</h1>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>

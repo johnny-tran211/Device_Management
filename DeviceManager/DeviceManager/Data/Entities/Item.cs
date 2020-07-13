@@ -46,8 +46,7 @@ namespace DeviceManager.Data.Entities
         [Column(TypeName = "varchar(50)")]
         public string Status { get; set; }
 
-
-        public int RoomId { get; set; }
-        public Room Room { get; set; }
+        [Required]
+        public int Quantity { get; set; }
     }
 }

@@ -1,0 +1,107 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<DeviceManager.Data.Entities.User> SignInManager
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>It.Next - IT Service Responsive Html Theme</title>
+    <!-- site icons -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/Customer/animate.css" />
+    <link rel="stylesheet" href="~/css/Customer/colors1.css" />
+    <link rel="stylesheet" href="~/css/Customer/custom.css" />
+    <link rel="stylesheet" href="~/css/Customer/responsive.css" />
+    <link rel="stylesheet" href="~/css/Customer/style.css" />
+    <link rel="stylesheet" href="~/css/Customer/inputNumber.css" />
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" />
+</head>
+<body id="default_theme" class="it_serv_shopping_cart shopping-cart">
+    <header id="default_header" class="header_style_1">
+        <div class="header_bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                        <!-- menu start -->
+                        <div class="menu_side">
+                            <div id="navbar_menu">
+                                <ul class="first-ul">
+                                    <li>
+                                        <a asp-controller="CustomerIndex" asp-action="Index">Home</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">About Us</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Service</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Blog</a>
+                                    </li>
+                                    <li>
+                                        <a a asp-controller="CustomerIndex" asp-action="AllItems" asp-route-pageIndex="1">Shop</a>
+                                        <ul>
+                                            <li><a asp-controller="CustomerIndex" asp-action="AllItems" asp-route-pageIndex="1">Shop List</a></li>
+                                            <li><a asp-controller="Cart" asp-action="Index">Shopping Cart</a></li>
+                                            <li><a href="#">Checkout</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#">Contact</a>
+                                    </li>
+                                    @if (SignInManager.IsSignedIn(User))
+                                    {
+                                        <li>
+                                            <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "CustomerIndex", new { area = "" })">
+                                                <button class="button-logout" type="submit">Logout</button>
+                                            </form>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a asp-area="Identity" asp-page="/Account/Register">Register</a>
+                                        </li>
+                                        <li>
+                                            <a asp-area="Identity" asp-page="/Account/Login">Login</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- menu end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- header bottom end -->
+    </header>
+    <div id="inner_banner" class="section inner_banner_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="full">
+                        <div class="title-holder">
+                            <div class="title-holder-cell text-left">
+                                <h1 class="page-title">Shopping Cart</h1>
+                                <ol class="breadcrumb">
+                                    <li><a asp-controller="CustomerIndex" asp-action="Index">Home</a></li>
+                                    <li class="active">Shopping Cart</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderBody()
+@*<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="~/js/inputNumber.js"></script>*@
+</body>
+</html>

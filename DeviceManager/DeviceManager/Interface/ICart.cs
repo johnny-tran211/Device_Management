@@ -1,4 +1,5 @@
 ﻿using DeviceManager.Models;
+using DeviceManager.Models.Item;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,8 @@ namespace DeviceManager.Interface
     {
         List<Cart> GetItemCart();
 
-        CartViewModel GetCart();
-
-        int AddToCart(Cart item);
-        int DeleteItems(string productId);
+        int AddToCart(CusItemVM item, int quantity);
+        int DeleteItems(int productId);
         void RemoveCart();
-        void AddRooms(List<RoomViewModel> rooms);
-        List<RoomViewModel> GetRooms();
     }
 }

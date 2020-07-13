@@ -39,7 +39,7 @@
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Room.RoomName)
+                @Html.DisplayNameFor(model => model.Quantity)
             </th>
             <th>
                 Edit
@@ -49,9 +49,6 @@
             </th>
             <th>
                 Delete
-            </th>
-            <th>
-                AddCart
             </th>
         </tr>
     </thead>
@@ -87,7 +84,7 @@
                 </td>
             }
             <td>
-                @Html.DisplayFor(modelItem => item.Room.RoomName)
+                @Html.DisplayFor(modelItem => item.Quantity)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit icon-edit icon-color-green"></i></a>
@@ -98,13 +95,7 @@
             <td>
                 <a asp-action="Delete" asp-route-id="@item.Id"><i class="fas fa-trash icon-edit icon-color-red"></i></a>
             </td>
-            <td>
-                <form asp-action="AddToCart" asp-controller="Cart">
-                    <input type="hidden" name="ProductName" value="@item.ProductName" />
-                    <input type="hidden" name="returnUrl" value="@Url.Action("index","Items")" />
-                    <input type="submit" value="AddToCart" class="btn btn-success" />
-                </form>
-            </td>
+
         </tr>
 
         }

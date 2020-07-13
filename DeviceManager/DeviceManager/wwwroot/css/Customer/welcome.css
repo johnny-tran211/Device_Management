@@ -13,10 +13,8 @@
         font-size: 4em;
         opacity: 1;
         transition: all 2.5s ease;
+
     }
-        .fly-in-text li a {
-            color: #898989;
-        }
         @media screen and (max-width: 1275px) {
             .fly-in-text li {
         margin-right: 30px;
@@ -45,7 +43,7 @@
     }
 }
 
-}
+
 
 .fly-in-text li:last-child {
     margin-right: 0;

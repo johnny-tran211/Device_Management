@@ -51,11 +51,10 @@
                                         <a href="#">Blog</a>
                                     </li>
                                     <li>
-                                        <a href="#">Shop</a>
+                                        <a a asp-controller="CustomerIndex" asp-action="AllItems" asp-route-pageIndex="1">Shop</a>
                                         <ul>
-                                            <li><a href="#">Shop List</a></li>
-                                            <li><a href="#">Shop Detail</a></li>
-                                            <li><a href="#">Shopping Cart</a></li>
+                                            <li><a asp-controller="CustomerIndex" asp-action="AllItems" asp-route-pageIndex="1">Shop List</a></li>
+                                            <li><a asp-controller="Cart" asp-action="Index">Shopping Cart</a></li>
                                             <li><a href="#">Checkout</a></li>
                                         </ul>
                                     </li>
@@ -69,17 +68,17 @@
                                                 <button class="button-logout" type="submit">Logout</button>
                                             </form>
                                         </li>
-                                     }
-                                     else
-                                     {
+                                    }
+                                    else
+                                    {
                                         <li>
                                             <a asp-area="Identity" asp-page="/Account/Register">Register</a>
                                         </li>
                                         <li>
                                             <a asp-area="Identity" asp-page="/Account/Login">Login</a>
                                         </li>
-                                      }
-                                    </ul>
+                                    }
+                                </ul>
                             </div>
                         </div>
                         <!-- menu end -->
@@ -89,7 +88,7 @@
         </div>
         <!-- header bottom end -->
     </header>
-    <div style="width: 100%; height: 300px;">
+    <div style="width: 100%; height: 250px;">
         <ul class="fly-in-text hidden">
             <li>W</li>
             <li>E</li>
@@ -98,8 +97,10 @@
             <li>O</li>
             <li>M</li>
             <li>E</li>
-            <li style="margin-left: 50px;"><a href="#">@User.Identity.Name</a></li>
         </ul>
+    </div>
+    <div class="p-b-10 username">
+    <a href="#">@User.Identity.Name</a>
     </div>
     <div class="section padding_layout_1">
         <div class="container">
@@ -246,24 +247,37 @@
             <div class="row">
                 @foreach (var item in Model)
                 {
-                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin_bottom_30_all">
-                    <div class="product_list">
-                        <div class="product_img"> <img class="img-responsive" src="~/image/@item.Image" alt=""> </div>
-                        <div class="product_detail_btm">
-                            <div class="center">
-                                <h4><a href="#">@item.ProductName</a></h4>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin_bottom_30_all">
+                        <div class="product_list">
+                            <div class="product_img"> <img class="img-responsive" src="~/image/@item.Image" alt=""> </div>
+                            <div class="product_detail_btm">
+                                <div class="center">
+                                    <h4><a href="#">@item.ProductName</a></h4>
+                                </div>
+                                @if (SignInManager.IsSignedIn(User))
+                                {
+
+                                    <div class="starratin">
+                                        <div class="center">
+                                            <form asp-action="AddToCart" asp-controller="Cart" aria-hidden="true">
+                                                <input type="hidden" name="Id" value="@item.Id" />
+                                                <input type="hidden" name="returnUrl" value="@Url.Action("AllItems","CustomerIndex")" />
+                                                <input type="submit" value="AddToCart" class="btn btn-success" />
+                                            </form>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="product_price">
+                                    <p><span class="old_price">$@item.Price</span> – <span class="new_price">$@item.DiscountPrice</span></p>
+                                </div>
                             </div>
-                            <div class="starratin">
-                                <div class="center"> <i class="fa fa-star" aria-hidden="true"></i> <i class="fa fa-star" aria-hidden="true"></i> <i class="fa fa-star" aria-hidden="true"></i> <i class="fa fa-star" aria-hidden="true"></i> <i class="fa fa-star-o" aria-hidden="true"></i> </div>
-                            </div>
-                            <div class="product_price">
-                                <p><span class="old_price">$@item.Price</span> – <span class="new_price">$@item.DiscountPrice</span></p>
-                            </div>
+
                         </div>
                     </div>
-                </div>
-
                 }
+            </div>
+            <div class="shopping-cart">
+                <a class="button" asp-action="AllItems" asp-controller="CustomerIndex" asp-route-pageIndex="1">SEE MORE</a>
             </div>
         </div>
     </div>

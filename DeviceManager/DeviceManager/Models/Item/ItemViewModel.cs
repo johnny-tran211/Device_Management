@@ -16,8 +16,6 @@ namespace DeviceManager.Models
 
         public string Type { get; set; }
 
-        public int RoomId { get; set; }
-
         public string Image { get; set; }
 
         public DateTime BuyDate { get; set; }
@@ -27,8 +25,8 @@ namespace DeviceManager.Models
         public int MaintainTimes { get; set; }
 
         public string Status { get; set; }
+        public int Quantity { get; set; }
 
-        public Room Room { get; set; }
     }
 }
 

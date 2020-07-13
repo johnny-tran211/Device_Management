@@ -15,5 +15,6 @@ namespace DeviceManager.Models.Item
 
         public double Price { get; set; }
         public double DiscountPrice { get; set; }
+        public int Quantity { get; set; }
     }
 }

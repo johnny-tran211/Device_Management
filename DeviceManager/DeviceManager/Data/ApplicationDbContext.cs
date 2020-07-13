@@ -16,13 +16,12 @@ namespace DeviceManager.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Item>()
-                .HasOne(p => p.Room)
-                .WithMany(b => b.Items).HasForeignKey(k => k.RoomId);
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Item>()
+            .HasIndex(u => u.ProductName)
+            .IsUnique();
         }
         public DbSet<History> Histories { get; set; }
         public DbSet<Item> Items { get; set; }
-        public DbSet<Room> Rooms { get; set; }
     }
 }
