@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeviceManager.Models
+namespace DeviceManager.Models.Cart
 {
     public class Cart
     {

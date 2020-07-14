@@ -29,6 +29,22 @@
             <label asp-for="Input.FullName" class="label-input100"></label>
             <input class="input100" asp-for="Input.FullName" placeholder="Enter FullName">
         </div>
+        <div class="wrap-input100 validate-input m-b-26">
+            <label asp-for="Input.Address" class="label-input100"></label>
+            <input class="input100" asp-for="Input.Address" placeholder="Enter Address">
+        </div>
+        <div class="wrap-input100 validate-input m-b-26">
+            <label asp-for="Input.City" class="label-input100"></label>
+            <input class="input100" asp-for="Input.City" placeholder="Enter City">
+        </div>
+        <div class="wrap-input100 validate-input m-b-26">
+            <label asp-for="Input.Country" class="label-input100"></label>
+            <input class="input100" asp-for="Input.Country" placeholder="Enter Country">
+        </div>
+        <div class="wrap-input100 validate-input m-b-26">
+            <label asp-for="Input.PhoneNumber" class="label-input100"></label>
+            <input class="input100" asp-for="Input.PhoneNumber" placeholder="Enter Phone">
+        </div>
         <div class="wrap-input100 validate-input m-b-26" asp-route-returnUrl="@Model.ReturnUrl">
             <label asp-for="Input.Name" class="label-input100"></label>
             <select asp-for="Input.Name" class="form-control" asp-items='new SelectList(roles, "Id", "Name")'></select>

@@ -56,7 +56,7 @@ namespace DeviceManager
             services.AddAuthentication();
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.IdleTimeout = TimeSpan.FromMinutes(1);
             });
             services.Configure<IdentityOptions>(options =>
             {

@@ -32,18 +32,6 @@ namespace DeviceManager.Controllers
             return View(listItem);
         }
 
-        //public async Task<IActionResult> AllItems()
-        //{
-        //    List<CusItemVM> listItem = await _context.Items.Select(x => new CusItemVM
-        //    {
-        //        Id = x.ItemId,
-        //        ProductName = x.ProductName,
-        //        Image = x.Image,
-        //        Price = x.Price,
-        //        DiscountPrice = x.DiscountPrice,
-        //    }).ToListAsync();
-        //    return View(listItem);
-        //}
         [HttpGet]
         public async Task<IActionResult> AllItems(int pageIndex)
         {

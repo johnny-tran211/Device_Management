@@ -20,8 +20,11 @@ namespace DeviceManager.Data
             modelBuilder.Entity<Item>()
             .HasIndex(u => u.ProductName)
             .IsUnique();
+            modelBuilder.Entity<CartDB>()
+                .HasKey(c => new { c.Id, c.ProductName });
         }
         public DbSet<History> Histories { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<CartDB> CartDBs { get; set; }
     }
 }

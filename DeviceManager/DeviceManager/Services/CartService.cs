@@ -1,6 +1,7 @@
 ﻿using DeviceManager.Data.Entities;
 using DeviceManager.Interface;
 using DeviceManager.Models;
+using DeviceManager.Models.Cart;
 using DeviceManager.Models.Item;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -13,15 +14,18 @@ namespace DeviceManager.Services
 
     public class CartService : ICart
     {
-        private List<Cart> Cart { set; get; }
+        private CartList CheckOutCart { set; get; }
 
         public int AddToCart(CusItemVM item, int quantity)
         {
-            if (Cart == null)
+            if (CheckOutCart == null)
             {
-                Cart = new List<Cart>();
+                CheckOutCart = new CartList();
+                CheckOutCart.Carts = new List<Cart>();
+                CheckOutCart.TotalPrice = 0;
+                CheckOutCart.EstimatedShipping = 5;
             }
-            var existCart = Cart.Find(x => x.Item.ProductName == item.ProductName);
+            var existCart = CheckOutCart.Carts.Find(x => x.Item.ProductName == item.ProductName);
             if (existCart == null)
             {
                 if (quantity > item.Quantity) return 1;
@@ -36,20 +40,24 @@ namespace DeviceManager.Services
                         Price = item.Price,
                         DiscountPrice = item.DiscountPrice,
                     },
-                  
+
                     Quantity = quantity,
                 };
-                Cart.Add(existCart);
+                CheckOutCart.TotalPrice = CheckOutCart.TotalPrice + (existCart.Item.DiscountPrice * quantity);
+                CheckOutCart.TotalWShipFee = CheckOutCart.TotalPrice + CheckOutCart.EstimatedShipping;
+                CheckOutCart.Carts.Add(existCart);
             }
             else
             {
-                if ((existCart.Quantity + quantity) > existCart.Item.Quantity )
+                if ((existCart.Quantity + quantity) > existCart.Item.Quantity)
                 {
                     return 1;
                 }
                 else
                 {
-                existCart.Quantity += quantity;
+                    existCart.Quantity += quantity;
+                    CheckOutCart.TotalPrice = CheckOutCart.TotalPrice + (existCart.Item.DiscountPrice * quantity);
+                    CheckOutCart.TotalWShipFee = CheckOutCart.TotalPrice + CheckOutCart.EstimatedShipping;
                 }
             }
             return 0;
@@ -57,13 +65,13 @@ namespace DeviceManager.Services
 
         public int DeleteItems(int productId)
         {
-            var existCart = Cart.Find(x => x.Item.Id == productId);
+            var existCart = CheckOutCart.Carts.Find(x => x.Item.Id == productId);
             if (existCart != null)
             {
-                Cart.Remove(existCart);
-                if(Cart.Count == 0)
+                CheckOutCart.Carts.Remove(existCart);
+                if (CheckOutCart.Carts.Count == 0)
                 {
-                    Cart = null;
+                    CheckOutCart = null;
                 }
                 return 0;
             }
@@ -73,14 +81,21 @@ namespace DeviceManager.Services
         }
 
 
-        public List<Cart> GetItemCart()
+        public CartList GetItemCart()
         {
-            return Cart;
+            return CheckOutCart;
         }
 
         public void RemoveCart()
         {
-            Cart = new List<Cart>();
+            CheckOutCart = new CartList();
+            CheckOutCart.Carts = new List<Cart>();
+            CheckOutCart.EstimatedShipping = 5;
+        }
+
+        public void SetItemCart(CartList cartList)
+        {
+            CheckOutCart = cartList;
         }
     }
 }

@@ -1,0 +1,102 @@
+﻿@model DeviceManager.Models.User.UserVM
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    var cart = Newtonsoft.Json.JsonConvert.DeserializeObject<DeviceManager.Models.Cart.CartList>(HttpContextAccessor.HttpContext.Session.GetString("Cart"));
+}
+
+<div class="section padding_layout_1 checkout_section">
+    <div class="container">
+        <form asp-action="checkout" asp-controller="Cart">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="checkout-form">
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-field">
+                                        <label asp-for="@Model.FullName"></label>
+                                        <input asp-for="@Model.FullName" class="form-control">
+                                        <span asp-validation-for="@Model.FullName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-field">
+                                        <label asp-for="@Model.Country"></label>
+                                        <input asp-for="@Model.Country" class="form-control">
+                                        <span asp-validation-for="@Model.Country" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-field">
+                                        <label asp-for="@Model.Address"></label>
+                                        <textarea asp-for="@Model.Address" class="form-control"></textarea>
+                                        <span asp-validation-for="@Model.Address" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-field">
+                                        <label asp-for="@Model.City"></label>
+                                        <input asp-for="@Model.City" class="form-control">
+                                        <span asp-validation-for="@Model.City" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-field">
+                                        <label asp-for="@Model.PhoneNumber"></label>
+                                        <input asp-for="@Model.PhoneNumber" class="form-control">
+                                        <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-field">
+                                        <label asp-for="@Model.Email"></label>
+                                        <input asp-for="@Model.Email" class="form-control">
+                                        <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="shopping-cart-cart">
+                        <table>
+                            <tbody>
+                                <tr class="head-table">
+                                    <td><h5>Cart Totals</h5></td>
+                                    <td class="text-right"></td>
+                                </tr>
+                                <tr>
+                                    <td><h4>Subtotal</h4></td>
+                                    <td class="text-right"><h4>$@cart.TotalPrice</h4></td>
+                                </tr>
+                                <tr>
+                                    <td><h5>Estimated shipping</h5></td>
+                                    <td class="text-right"><h4>$@cart.EstimatedShipping</h4></td>
+                                </tr>
+                                <tr>
+                                    <td><h3>Total</h3></td>
+                                    <td class="text-right"><h4>$@cart.TotalWShipFee</h4></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="form-field">
+                                            <input class="button" style="border-radius: 5px;cursor: pointer;background: #039ee3; color: white;" type="submit" value="Check Out">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

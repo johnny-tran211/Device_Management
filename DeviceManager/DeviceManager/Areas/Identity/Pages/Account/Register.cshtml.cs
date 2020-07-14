@@ -68,6 +68,18 @@ namespace DeviceManager.Areas.Identity.Pages.Account
             [Required]
             [Display(Name = "FullName")]
             public string FullName { get; set; }
+            [Required]
+            [Display(Name = "Address")]
+            public string Address { get; set; }
+            [Required]
+            [Display(Name = "City")]
+            public string City { get; set; }
+            [Required]
+            [Display(Name = "Country")]
+            public string Country { get; set; }
+            [Required]
+            [Display(Name = "Phone")]
+            public string PhoneNumber { get; set; }
         }
 
         public void OnGetAsync(string returnUrl = null)
@@ -83,7 +95,16 @@ namespace DeviceManager.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var role =  _roleManager.FindByIdAsync(Input.Name).Result;
-                var user = new User { UserName = Input.Email, Email = Input.Email, FullName = Input.FullName, Dob = DateTime.Now };
+                var user = new User { 
+                    UserName = Input.Email, 
+                    Email = Input.Email, 
+                    FullName = Input.FullName, 
+                    Dob = DateTime.Now, 
+                    Address = Input.Address, 
+                    City = Input.City, 
+                    Country = Input.Country,
+                    PhoneNumber = Input.PhoneNumber,
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

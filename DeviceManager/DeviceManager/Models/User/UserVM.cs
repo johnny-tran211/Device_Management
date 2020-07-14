@@ -1,25 +1,25 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeviceManager.Data.Entities
+namespace DeviceManager.Models.User
 {
-    public class User : IdentityUser
+    public class UserVM
     {
+        [Required]
+        public string Email { get; set; }
         [Required]
         [StringLength(50, ErrorMessage = "Fullname has less than 100 characters")]
         public string FullName { get; set; }
-        [Required]
-        public DateTime Dob { get; set; }
         [Required]
         public string Address { get; set; }
         [Required]
         public string City { get; set; }
         [Required]
         public string Country { get; set; }
-
+        [Required]
+        public string PhoneNumber { get; set; }
     }
 }
