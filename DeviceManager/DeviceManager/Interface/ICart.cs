@@ -13,8 +13,9 @@ namespace DeviceManager.Interface
         CartList GetItemCart();
         void SetItemCart(CartList cartList);
         int AddToCart(CusItemVM item, int quantity);
-        int DeleteItems(int productId);
+        int DeleteItems(string productName);
         void RemoveCart();
 
+        CartList ChangeObjToCartList(List<CartObject> cartObject);
     }
 }

@@ -19,7 +19,6 @@ using Newtonsoft.Json;
 
 namespace DeviceManager.Controllers
 {
-    [Authorize(Roles = "User")]
     public class CartController : Controller
     {
         private readonly ICart _cart;
@@ -38,11 +37,11 @@ namespace DeviceManager.Controllers
             if (_signInManager.IsSignedIn(User) && HttpContext.Session.GetString("Cart") == null)
             {
 
-                var carts = (from i in _context.Items
+                List<CartObject> carts = (from i in _context.Items
                              join ca in _context.CartDBs on i.ProductName equals ca.ProductName
                              where ca.Status.Equals("Waiting")
                              where ca.Email.Equals(User.Identity.Name)
-                             select new
+                             select new CartObject
                              {
                                  Id = ca.Id,
                                  ProductName = i.ProductName,
@@ -50,34 +49,12 @@ namespace DeviceManager.Controllers
                                  Price = i.Price,
                                  DiscountPrice = i.DiscountPrice,
                                  ItemQuantity = i.Quantity,
-                                 quantity = ca.Quantity
+                                 Quantity = ca.Quantity
                              }).ToList();
                 if (carts.Count > 0)
                 {
-                    CartList cl = new CartList();
-                    cl.Carts = new List<Cart>();
-
-                    for(var i = 0; i < carts.Count; i++)
-                    {
-                        cl.Carts.Add(new Cart()
-                        {
-                            Quantity = carts[i].quantity,
-                            Item = new CusItemVM()
-                            {
-                                Id = carts[i].Id,
-                                ProductName = carts[i].ProductName,
-                                Image = carts[i].Image,
-                                Price = carts[i].Price,
-                                DiscountPrice = carts[i].DiscountPrice,
-                                Quantity = carts[i].ItemQuantity,
-                            },
-                        });
-                        cl.TotalPrice += Math.Round((carts[i].DiscountPrice * carts[i].quantity), 2);
-                    }
-                    cl.EstimatedShipping = 5;
-                    cl.TotalWShipFee = cl.TotalPrice + cl.EstimatedShipping;
+                    CartList cl = _cart.ChangeObjToCartList(carts);
                     HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cl));
-                    _cart.SetItemCart(cl);
                     return View(cl);
                 }
                 else
@@ -103,15 +80,14 @@ namespace DeviceManager.Controllers
 
         [HttpPost, ActionName("AddToCart")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddToCart(string returnUrl, [Bind("Id")] CusItemVM cartItem, int quantity)
+        public IActionResult AddToCart(string returnUrl, [Bind("ProductName")] CusItemVM cartItem, int quantity)
         {
             if (HttpContext.Session.GetString("Cart") == null)
             {
                 _cart.RemoveCart();
             }
-            var item = _context.Items.Where(i => i.ItemId == cartItem.Id).Select(s => new CusItemVM()
+            var item = _context.Items.Where(i => i.ProductName == cartItem.ProductName).Select(s => new CusItemVM()
             {
-                Id = s.ItemId,
                 ProductName = s.ProductName,
                 Image = s.Image,
                 Price = s.Price,
@@ -121,6 +97,10 @@ namespace DeviceManager.Controllers
             int result = _cart.AddToCart(item, quantity);
             if (result == 0)
             {
+                //if (_signInManager.IsSignedIn(User))
+                //{
+                //    _context.CartDBs.Add();
+                //}
                 HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(_cart.GetItemCart()));
             }
             else if (result == 1)
@@ -132,19 +112,23 @@ namespace DeviceManager.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string productName)
         {
-            var cart = JsonConvert.DeserializeObject<CartList>(HttpContext.Session.GetString("Cart"));
-            if (cart.Carts == null)
+            if (HttpContext.Session.GetString("Cart") == null)
             {
                 ViewBag.ERRORMESSAGE = "List is empty";
-                return View();
+                return RedirectToAction(nameof(Index));
             }
-            int result = _cart.DeleteItems(id);
+            var cart = JsonConvert.DeserializeObject<CartList>(HttpContext.Session.GetString("Cart"));
+            int result = _cart.DeleteItems(productName);
             if (result == 0)
             {
                 ViewBag.STATUS = "Delete Successful !!!";
                 HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(_cart.GetItemCart()));
+            }
+            else if (result == 2)
+            {
+                HttpContext.Session.Clear();
             }
             else
             {

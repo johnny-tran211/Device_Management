@@ -9,7 +9,7 @@ namespace DeviceManager.Data.Entities
 {
     public class CartDB
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(50, ErrorMessage = "Fullname has less than 50 characters")]

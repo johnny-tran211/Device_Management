@@ -31,27 +31,21 @@
                             <div class="center">
                                 <h4><a href="#">@item.ProductName</a></h4>
                             </div>
-                            @if (SignInManager.IsSignedIn(User))
-                            {
-
-
-                                <form asp-action="AddToCart" asp-controller="Cart" aria-hidden="true">
-                                    <div style="text-align: center">
-                                        @*<span class="input-number-decrement">–</span>
-                                            <input class="input-number" type="text" value="1" min="1" max="10">
-                                            <span class="input-number-increment">+</span>*@
-                                        <input type="number" min="1" value="1" name="quantity" />
+                            <form asp-action="AddToCart" asp-controller="Cart" aria-hidden="true">
+                                <div style="text-align: center;">
+                                    @*<span class="input-number-decrement">–</span>
+            <input class="input-number" type="text" value="1" min="1" max="10">
+            <span class="input-number-increment">+</span>*@
+                                    <input type="number" min="1" value="1" name="quantity" />
+                                </div>
+                                <input type="hidden" name="ProductName" value="@item.ProductName" />
+                                <input type="hidden" name="returnUrl" value="@Url.Action("AllItems","CustomerIndex", new { pageIndex = Model.pageSize})" />
+                                <div class="starratin" style="margin-top: 10px">
+                                    <div class="center">
+                                        <input type="submit" value="AddToCart" class="btn btn-success" />
                                     </div>
-                                    <input type="hidden" name="Id" value="@item.Id" />
-                                    <input type="hidden" name="returnUrl" value="@Url.Action("AllItems","CustomerIndex", new { pageIndex = Model.pageSize})" />
-                                    <div class="starratin" style="margin-top: 10px">
-                                        <div class="center">
-                                            <input type="submit" value="AddToCart" class="btn btn-success" />
-                                        </div>
-                                    </div>
-                                </form>
-
-                            }
+                                </div>
+                            </form>
                             <div class="product_price">
                                 <p><span class="old_price">$@item.Price</span> – <span class="new_price">$@item.DiscountPrice</span></p>
                             </div>

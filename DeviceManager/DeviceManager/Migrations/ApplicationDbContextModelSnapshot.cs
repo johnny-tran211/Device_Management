@@ -21,8 +21,8 @@ namespace DeviceManager.Migrations
 
             modelBuilder.Entity("DeviceManager.Data.Entities.CartDB", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ProductName")
                         .HasColumnType("varchar(50)")

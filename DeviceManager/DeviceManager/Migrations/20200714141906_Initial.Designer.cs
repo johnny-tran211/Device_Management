@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeviceManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200708072117_Init-database")]
-    partial class Initdatabase
+    [Migration("20200714141906_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,29 @@ namespace DeviceManager.Migrations
                 .HasAnnotation("ProductVersion", "3.1.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("DeviceManager.Data.Entities.CartDB", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProductName")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id", "ProductName");
+
+                    b.ToTable("CartDBs");
+                });
 
             modelBuilder.Entity("DeviceManager.Data.Entities.History", b =>
                 {
@@ -87,6 +110,9 @@ namespace DeviceManager.Migrations
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<double>("DiscountPrice")
+                        .HasColumnType("float");
+
                     b.Property<string>("Image")
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(250);
@@ -97,12 +123,15 @@ namespace DeviceManager.Migrations
                     b.Property<int>("MaintainTimes")
                         .HasColumnType("int");
 
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<int>("RoomId")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -116,30 +145,10 @@ namespace DeviceManager.Migrations
 
                     b.HasKey("ItemId");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("ProductName")
+                        .IsUnique();
 
                     b.ToTable("Items");
-                });
-
-            modelBuilder.Entity("DeviceManager.Data.Entities.Room", b =>
-                {
-                    b.Property<int>("RoomId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("RoomName")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Status")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
-
-                    b.HasKey("RoomId");
-
-                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("DeviceManager.Data.Entities.User", b =>
@@ -150,8 +159,20 @@ namespace DeviceManager.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Dob")
@@ -344,15 +365,6 @@ namespace DeviceManager.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("DeviceManager.Data.Entities.Item", b =>
-                {
-                    b.HasOne("DeviceManager.Data.Entities.Room", "Room")
-                        .WithMany("Items")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

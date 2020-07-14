@@ -23,7 +23,6 @@ namespace DeviceManager.Controllers
         {
             List<CusItemVM> listItem = await _context.Items.Select(x => new CusItemVM
             {
-                Id = x.ItemId,
                 ProductName = x.ProductName,
                 Image = x.Image,
                 Price = x.Price,
@@ -41,7 +40,6 @@ namespace DeviceManager.Controllers
             var items = await _context.Items.Skip((pageIndex - 1) * PAGE_SIZE).Take(PAGE_SIZE)
             .Select(x => new CusItemVM()
             {
-                Id = x.ItemId,
                 ProductName = x.ProductName,
                 Image = x.Image,
                 Price = x.Price,

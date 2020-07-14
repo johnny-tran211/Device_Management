@@ -8,6 +8,7 @@ namespace DeviceManager.Models.Cart
 {
     public class Cart
     {
+        public Guid CartId { get; set; }
         public CusItemVM Item { get; set; }
         public int Quantity { get; set; }
     }

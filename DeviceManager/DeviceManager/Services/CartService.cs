@@ -15,25 +15,19 @@ namespace DeviceManager.Services
     public class CartService : ICart
     {
         private CartList CheckOutCart { set; get; }
+        private Guid IdForCart { set; get; }
 
         public int AddToCart(CusItemVM item, int quantity)
         {
-            if (CheckOutCart == null)
-            {
-                CheckOutCart = new CartList();
-                CheckOutCart.Carts = new List<Cart>();
-                CheckOutCart.TotalPrice = 0;
-                CheckOutCart.EstimatedShipping = 5;
-            }
-            var existCart = CheckOutCart.Carts.Find(x => x.Item.ProductName == item.ProductName);
+            var existCart = CheckOutCart.Carts.Find(x => x.Item.ProductName.Equals(item.ProductName));
             if (existCart == null)
             {
                 if (quantity > item.Quantity) return 1;
                 existCart = new Cart()
                 {
+                    CartId = (IdForCart == null)? Guid.NewGuid() : IdForCart,
                     Item = new CusItemVM()
                     {
-                        Id = item.Id,
                         ProductName = item.ProductName,
                         Image = item.Image,
                         Quantity = item.Quantity,
@@ -43,6 +37,10 @@ namespace DeviceManager.Services
 
                     Quantity = quantity,
                 };
+                if (IdForCart == null)
+                {
+                    IdForCart = existCart.CartId;
+                }
                 CheckOutCart.TotalPrice = CheckOutCart.TotalPrice + (existCart.Item.DiscountPrice * quantity);
                 CheckOutCart.TotalWShipFee = CheckOutCart.TotalPrice + CheckOutCart.EstimatedShipping;
                 CheckOutCart.Carts.Add(existCart);
@@ -63,15 +61,45 @@ namespace DeviceManager.Services
             return 0;
         }
 
-        public int DeleteItems(int productId)
+        public CartList ChangeObjToCartList(List<CartObject> cartObject)
         {
-            var existCart = CheckOutCart.Carts.Find(x => x.Item.Id == productId);
+            CartList cartList = new CartList();
+            cartList.Carts = new List<Cart>();
+
+            for (var i = 0; i < cartObject.Count; i++)
+            {
+                cartList.Carts.Add(new Cart()
+                {
+                    CartId = cartObject[i].Id,
+                    Quantity = cartObject[i].Quantity,
+                    Item = new CusItemVM()
+                    {
+                        ProductName = cartObject[i].ProductName,
+                        Image = cartObject[i].Image,
+                        Price = cartObject[i].Price,
+                        DiscountPrice = cartObject[i].DiscountPrice,
+                        Quantity = cartObject[i].ItemQuantity,
+                    },
+                });
+                cartList.TotalPrice += Math.Round((cartObject[i].DiscountPrice * cartObject[i].Quantity), 2);
+                
+            }
+            cartList.EstimatedShipping = 5;
+            cartList.TotalWShipFee = cartList.TotalPrice + cartList.EstimatedShipping;
+            CheckOutCart = cartList;
+            IdForCart = cartObject[0].Id;
+            return CheckOutCart;
+        }
+
+        public int DeleteItems(string productName)
+        {
+            var existCart = CheckOutCart.Carts.Find(x => x.Item.ProductName.Equals(productName));
             if (existCart != null)
             {
                 CheckOutCart.Carts.Remove(existCart);
                 if (CheckOutCart.Carts.Count == 0)
                 {
-                    CheckOutCart = null;
+                    return 2;
                 }
                 return 0;
             }
@@ -85,12 +113,13 @@ namespace DeviceManager.Services
         {
             return CheckOutCart;
         }
-
         public void RemoveCart()
         {
             CheckOutCart = new CartList();
             CheckOutCart.Carts = new List<Cart>();
+            CheckOutCart.TotalPrice = 0;
             CheckOutCart.EstimatedShipping = 5;
+            IdForCart = Guid.NewGuid();
         }
 
         public void SetItemCart(CartList cartList)

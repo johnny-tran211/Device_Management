@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DeviceManager.Migrations
 {
-    public partial class Initdatabase : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,11 +41,29 @@ namespace DeviceManager.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FullName = table.Column<string>(maxLength: 50, nullable: false),
-                    Dob = table.Column<DateTime>(nullable: false)
+                    Dob = table.Column<DateTime>(nullable: false),
+                    Address = table.Column<string>(nullable: false),
+                    City = table.Column<string>(nullable: false),
+                    Country = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CartDBs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    ProductName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(nullable: true),
+                    Quantity = table.Column<int>(nullable: false),
+                    Status = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CartDBs", x => new { x.Id, x.ProductName });
                 });
 
             migrationBuilder.CreateTable(
@@ -72,17 +90,26 @@ namespace DeviceManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Rooms",
+                name: "Items",
                 columns: table => new
                 {
-                    RoomId = table.Column<int>(nullable: false)
+                    ItemId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoomName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Status = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                    ProductName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    Type = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    Image = table.Column<string>(type: "varchar(50)", maxLength: 250, nullable: true),
+                    BuyDate = table.Column<DateTime>(nullable: false),
+                    MaintainDate = table.Column<DateTime>(nullable: false),
+                    MaintainTimes = table.Column<int>(nullable: false),
+                    Price = table.Column<double>(nullable: false),
+                    DiscountPrice = table.Column<double>(nullable: false),
+                    Status = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    Quantity = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rooms", x => x.RoomId);
+                    table.PrimaryKey("PK_Items", x => x.ItemId);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,33 +218,6 @@ namespace DeviceManager.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Items",
-                columns: table => new
-                {
-                    ItemId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Type = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Image = table.Column<string>(type: "varchar(50)", maxLength: 250, nullable: true),
-                    BuyDate = table.Column<DateTime>(nullable: false),
-                    MaintainDate = table.Column<DateTime>(nullable: false),
-                    MaintainTimes = table.Column<int>(nullable: false),
-                    Status = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
-                    RoomId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Items", x => x.ItemId);
-                    table.ForeignKey(
-                        name: "FK_Items_Rooms_RoomId",
-                        column: x => x.RoomId,
-                        principalTable: "Rooms",
-                        principalColumn: "RoomId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -258,9 +258,10 @@ namespace DeviceManager.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_RoomId",
+                name: "IX_Items_ProductName",
                 table: "Items",
-                column: "RoomId");
+                column: "ProductName",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -281,6 +282,9 @@ namespace DeviceManager.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CartDBs");
+
+            migrationBuilder.DropTable(
                 name: "Histories");
 
             migrationBuilder.DropTable(
@@ -291,9 +295,6 @@ namespace DeviceManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Rooms");
         }
     }
 }

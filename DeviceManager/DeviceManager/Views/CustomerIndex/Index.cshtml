@@ -254,19 +254,16 @@
                                 <div class="center">
                                     <h4><a href="#">@item.ProductName</a></h4>
                                 </div>
-                                @if (SignInManager.IsSignedIn(User))
-                                {
-
                                     <div class="starratin">
                                         <div class="center">
                                             <form asp-action="AddToCart" asp-controller="Cart" aria-hidden="true">
-                                                <input type="hidden" name="Id" value="@item.Id" />
+                                                <input type="hidden" name="quantity" value="1" />
+                                                <input type="hidden" name="ProductName" value="@item.ProductName" />
                                                 <input type="hidden" name="returnUrl" value="@Url.Action("AllItems","CustomerIndex")" />
                                                 <input type="submit" value="AddToCart" class="btn btn-success" />
                                             </form>
                                         </div>
                                     </div>
-                                }
                                 <div class="product_price">
                                     <p><span class="old_price">$@item.Price</span> – <span class="new_price">$@item.DiscountPrice</span></p>
                                 </div>
