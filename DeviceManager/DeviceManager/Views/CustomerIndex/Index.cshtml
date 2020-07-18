@@ -44,8 +44,11 @@
                                     <li>
                                         <a href="#">About Us</a>
                                     </li>
-                                    <li>
-                                        <a href="#">Service</a>
+                                     <li>
+                                        <a asp-controller="Purchase" asp-action="Index">My Purchases</a>
+                                        <ul>
+                                            <li><a asp-controller="Purchase" asp-action="Histories">Purchase Histories</a></li>
+                                        </ul>
                                     </li>
                                     <li>
                                         <a href="#">Blog</a>
@@ -252,18 +255,19 @@
                             <div class="product_img"> <img class="img-responsive" src="~/image/@item.Image" alt=""> </div>
                             <div class="product_detail_btm">
                                 <div class="center">
-                                    <h4><a href="#">@item.ProductName</a></h4>
+                                    <h4><a asp-controller="Items" asp-action="DetailUser" asp-route-productName="@item.ProductName">@item.ProductName</a></h4>
                                 </div>
-                                    <div class="starratin">
+                                    @*<div class="starratin">
                                         <div class="center">
                                             <form asp-action="AddToCart" asp-controller="Cart" aria-hidden="true">
                                                 <input type="hidden" name="quantity" value="1" />
                                                 <input type="hidden" name="ProductName" value="@item.ProductName" />
+                                                <input type="hidden" name="Image" value="@item.Image" />
                                                 <input type="hidden" name="returnUrl" value="@Url.Action("AllItems","CustomerIndex")" />
                                                 <input type="submit" value="AddToCart" class="btn btn-success" />
                                             </form>
                                         </div>
-                                    </div>
+                                    </div>*@
                                 <div class="product_price">
                                     <p><span class="old_price">$@item.Price</span> – <span class="new_price">$@item.DiscountPrice</span></p>
                                 </div>

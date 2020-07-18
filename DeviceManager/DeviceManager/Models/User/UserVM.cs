@@ -9,6 +9,7 @@ namespace DeviceManager.Models.User
     public class UserVM
     {
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
         [Required]
         [StringLength(50, ErrorMessage = "Fullname has less than 100 characters")]

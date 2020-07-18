@@ -191,5 +191,18 @@ namespace DeviceManager.Controllers
         {
             return _context.Items.Any(e => e.ItemId == id);
         }
+        [AllowAnonymous]
+        public async Task<IActionResult> DetailUser(string productName)
+        {
+            var item = await _context.Items
+                .Where(c => c.Status == Status.Active.ToString())
+                .FirstOrDefaultAsync(m => m.ProductName == productName);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return View(item);
+        }
     }
 }

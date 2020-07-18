@@ -26,5 +26,6 @@ namespace DeviceManager.Data
         public DbSet<History> Histories { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<CartDB> CartDBs { get; set; }
+        public DbSet<CheckOut> CheckOuts { get; set; }
     }
 }

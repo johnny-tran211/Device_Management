@@ -44,6 +44,7 @@ namespace DeviceManager.Services
                 CheckOutCart.TotalPrice = CheckOutCart.TotalPrice + (existCart.Item.DiscountPrice * quantity);
                 CheckOutCart.TotalWShipFee = CheckOutCart.TotalPrice + CheckOutCart.EstimatedShipping;
                 CheckOutCart.Carts.Add(existCart);
+                return 2;
             }
             else
             {
@@ -56,9 +57,9 @@ namespace DeviceManager.Services
                     existCart.Quantity += quantity;
                     CheckOutCart.TotalPrice = CheckOutCart.TotalPrice + (existCart.Item.DiscountPrice * quantity);
                     CheckOutCart.TotalWShipFee = CheckOutCart.TotalPrice + CheckOutCart.EstimatedShipping;
+                    return 0;
                 }
             }
-            return 0;
         }
 
         public CartList ChangeObjToCartList(List<CartObject> cartObject)
@@ -96,6 +97,8 @@ namespace DeviceManager.Services
             var existCart = CheckOutCart.Carts.Find(x => x.Item.ProductName.Equals(productName));
             if (existCart != null)
             {
+                CheckOutCart.TotalPrice -= existCart.Item.DiscountPrice * existCart.Quantity;
+                CheckOutCart.TotalWShipFee = CheckOutCart.TotalPrice + CheckOutCart.TotalWShipFee;
                 CheckOutCart.Carts.Remove(existCart);
                 if (CheckOutCart.Carts.Count == 0)
                 {
@@ -108,6 +111,10 @@ namespace DeviceManager.Services
 
         }
 
+        public Guid GetGuid()
+        {
+            return IdForCart;
+        }
 
         public CartList GetItemCart()
         {

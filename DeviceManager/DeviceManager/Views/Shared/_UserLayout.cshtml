@@ -37,7 +37,10 @@
                                         <a href="#">About Us</a>
                                     </li>
                                     <li>
-                                        <a href="#">Service</a>
+                                        <a asp-controller="Purchase" asp-action="Index">My Purchases</a>
+                                        <ul>
+                                            <li><a asp-controller="Purchase" asp-action="Histories">Purchase Histories</a></li>
+                                        </ul>
                                     </li>
                                     <li>
                                         <a href="#">Blog</a>
@@ -101,6 +104,7 @@
     </div>
     @RenderBody()
     @RenderSection("Scripts", required: false)
+    @RenderSection("Styles", required: false)
     @*<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script type="text/javascript" src="~/js/inputNumber.js"></script>*@
 </body>

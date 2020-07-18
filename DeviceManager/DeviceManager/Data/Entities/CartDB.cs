@@ -18,6 +18,7 @@ namespace DeviceManager.Data.Entities
         public string Email { get; set; }
         public int Quantity { get; set; }
         public string Status { get; set; }
+        public string Image { get; set; }
 
     }
 }

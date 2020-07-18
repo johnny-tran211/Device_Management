@@ -29,9 +29,9 @@
                                     <tr>
                                         <td class="col-sm-8 col-md-6">
                                             <div class="media">
-                                                <a class="thumbnail pull-left" href="#"> <img class="media-object" src="~/image/@item.Item.Image" alt="#"></a>
+                                                <a class="thumbnail pull-left"  asp-controller="Items" asp-action="DetailUser" asp-route-productName="@item.Item.ProductName"> <img class="media-object" src="~/image/@item.Item.Image" alt="#"></a>
                                                 <div class="media-body">
-                                                    <h4 class="media-heading"><a href="#">@item.Item.ProductName</a></h4>
+                                                    <h4 class="media-heading"><a  asp-controller="Items" asp-action="DetailUser" asp-route-productName="@item.Item.ProductName">@item.Item.ProductName</a></h4>
                                                     <span>Status: </span><span class="text-success">In Stock</span>
                                                 </div>
                                             </div>

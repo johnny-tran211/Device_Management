@@ -1,0 +1,43 @@
+﻿@model List<DeviceManager.Models.Purchase.PurchaseVM> 
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+    <div class="section padding_layout_1 Shopping_cart_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <div class="product-table">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>CartId</th>
+                                    <th>BuyDate</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    <th> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="col-sm-8 col-md-6">
+                                            <p class="price_table">@item.CartId</p>
+                                        </td>
+                                        <td class="col-sm-1 col-md-1 text-center"><p class="price_table">@item.BuyDate</p></td>
+                                        <td class="col-sm-1 col-md-1 text-center"><p class="price_table">@item.Status</p></td>
+                                        <td class="col-sm-1 col-md-1 text-center"><p class="price_table">@item.Total</p></td>
+                                        <td class="col-sm-1 col-md-1"><a asp-controller="Purchase" asp-action="GetDetails" class="bt_main" asp-route-cartId="@item.CartId"><i class="fa fa-trash"></i> Detail</a></td>
+                                    </tr>
+                                }
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            
+            

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DeviceManager.Data;
 using DeviceManager.Data.Entities;
+using DeviceManager.Enum;
 using DeviceManager.Interface;
 using DeviceManager.Models;
 using DeviceManager.Models.Cart;
@@ -38,19 +39,19 @@ namespace DeviceManager.Controllers
             {
 
                 List<CartObject> carts = (from i in _context.Items
-                             join ca in _context.CartDBs on i.ProductName equals ca.ProductName
-                             where ca.Status.Equals("Waiting")
-                             where ca.Email.Equals(User.Identity.Name)
-                             select new CartObject
-                             {
-                                 Id = ca.Id,
-                                 ProductName = i.ProductName,
-                                 Image = i.Image,
-                                 Price = i.Price,
-                                 DiscountPrice = i.DiscountPrice,
-                                 ItemQuantity = i.Quantity,
-                                 Quantity = ca.Quantity
-                             }).ToList();
+                                          join ca in _context.CartDBs on i.ProductName equals ca.ProductName
+                                          where ca.Status.Equals("Waiting")
+                                          where ca.Email.Equals(User.Identity.Name)
+                                          select new CartObject
+                                          {
+                                              Id = ca.Id,
+                                              ProductName = i.ProductName,
+                                              Image = i.Image,
+                                              Price = i.Price,
+                                              DiscountPrice = i.DiscountPrice,
+                                              ItemQuantity = i.Quantity,
+                                              Quantity = ca.Quantity
+                                          }).ToList();
                 if (carts.Count > 0)
                 {
                     CartList cl = _cart.ChangeObjToCartList(carts);
@@ -80,7 +81,7 @@ namespace DeviceManager.Controllers
 
         [HttpPost, ActionName("AddToCart")]
         [ValidateAntiForgeryToken]
-        public IActionResult AddToCart(string returnUrl, [Bind("ProductName")] CusItemVM cartItem, int quantity)
+        public async Task<IActionResult> AddToCart(string returnUrl, [Bind("ProductName, Image")] CusItemVM cartItem, int quantity)
         {
             if (HttpContext.Session.GetString("Cart") == null)
             {
@@ -95,24 +96,47 @@ namespace DeviceManager.Controllers
                 Quantity = s.Quantity,
             }).FirstOrDefault();
             int result = _cart.AddToCart(item, quantity);
-            if (result == 0)
-            {
-                //if (_signInManager.IsSignedIn(User))
-                //{
-                //    _context.CartDBs.Add();
-                //}
-                HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(_cart.GetItemCart()));
-            }
-            else if (result == 1)
+            if (result == 1)
             {
                 TempData["Error"] = "Product is out of stock";
+
+            }
+            else
+            {
+                if (_signInManager.IsSignedIn(User))
+                {
+                    if (result == 0)
+                    {
+                        var updateCart = _context.CartDBs.SingleOrDefault(c => c.ProductName.Equals(cartItem.ProductName) && c.Id.Equals(_cart.GetGuid()));
+                        if (updateCart != null)
+                        {
+                            updateCart.Quantity += quantity;
+                        }
+                    }
+                    else if (result == 2)
+                    {
+                        _context.CartDBs.Add(new CartDB()
+                        {
+                            Id = _cart.GetGuid(),
+                            Email = User.Identity.Name,
+                            ProductName = cartItem.ProductName,
+                            Quantity = quantity,
+                            Status = CartStatus.Waiting.ToString(),
+                            Image = cartItem.Image,
+
+                        });
+                       
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(_cart.GetItemCart()));
             }
             return Redirect(returnUrl);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(string productName)
+        public async Task<IActionResult> Delete(string productName)
         {
             if (HttpContext.Session.GetString("Cart") == null)
             {
@@ -124,7 +148,13 @@ namespace DeviceManager.Controllers
             if (result == 0)
             {
                 ViewBag.STATUS = "Delete Successful !!!";
-                HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(_cart.GetItemCart()));
+                if (_signInManager.IsSignedIn(User))
+                {
+                    var updateCart = _context.CartDBs.SingleOrDefault(c=> c.ProductName.Equals(productName) && c.Id.Equals(_cart.GetGuid()));
+                    _context.CartDBs.Remove(updateCart);
+                    await _context.SaveChangesAsync();
+                    }
+                    HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(_cart.GetItemCart()));
             }
             else if (result == 2)
             {
@@ -144,33 +174,79 @@ namespace DeviceManager.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            var currentUser = await _userManager.GetUserAsync(User);
-            UserVM user = new UserVM()
+            UserVM user = new UserVM();
+            if (_signInManager.IsSignedIn(User))
             {
-                Email = currentUser.Email,
-                FullName = currentUser.FullName,
-                Address = currentUser.Address,
-                City = currentUser.City,
-                Country = currentUser.Country,
-                PhoneNumber = currentUser.PhoneNumber,
-            };
+                var currentUser = await _userManager.GetUserAsync(User);
+                user = new UserVM()
+                {
+                    Email = currentUser.Email,
+                    FullName = currentUser.FullName,
+                    Address = currentUser.Address,
+                    City = currentUser.City,
+                    Country = currentUser.Country,
+                    PhoneNumber = currentUser.PhoneNumber,
+                };
+            }
             return View(user);
         }
 
         [HttpPost, ActionName("CheckOut")]
         [ValidateAntiForgeryToken]
-        public IActionResult CheckOut([Bind("Email, FullName, Address, City, Country, PhoneNumber")] UserVM userVM)
+        public async Task<IActionResult> CheckOut([Bind("Email, FullName, Address, City, Country, PhoneNumber")] UserVM userVM, string returnUrl)
         {
             if (ModelState.IsValid)
             {
-
                 if (HttpContext.Session.GetString("Cart") == null)
                 {
                     TempData["Failed"] = "Checkout Failed !!!";
                     return RedirectToAction(nameof(Index));
                 }
-                var cart = JsonConvert.DeserializeObject<CartList>(HttpContext.Session.GetString("Cart"));
+                    var cart = JsonConvert.DeserializeObject<CartList>(HttpContext.Session.GetString("Cart"));
+                if (!_signInManager.IsSignedIn(User))
+                {
+                    for (int i = 0; i < cart.Carts.Count; i++)
+                    {
 
+                    await _context.CartDBs.AddAsync(new CartDB()
+                    {
+                        Id = cart.Carts[i].CartId,
+                        Email = userVM.Email,
+                        ProductName = cart.Carts[i].Item.ProductName,
+                        Quantity = cart.Carts[i].Quantity,
+                        Status = CartStatus.Waiting.ToString(),
+                        Image = cart.Carts[i].Item.Image,
+
+                    });
+                    }
+                }
+                // Update Quantity Items
+                for (int i = 0; i < cart.Carts.Count; i++)
+                {
+                    var item = await _context.Items.FirstOrDefaultAsync(f => f.ProductName.Equals(cart.Carts[i].Item.ProductName));
+                    item.Quantity -= cart.Carts[i].Quantity;
+                    
+                }
+                // Update Cart Status
+                _context.CartDBs.Where(c => c.Id.Equals(cart.Carts[0].CartId)).ToList().ForEach(i => i.Status = CartStatus.Processing.ToString());
+                // Checkout Cart
+                await _context.CheckOuts.AddAsync(new Data.Entities.CheckOut() {
+                    CartId = cart.Carts[0].CartId,
+                    Address = userVM.Address,
+                    City = userVM.City,
+                    Country = userVM.Country,
+                    Phone = userVM.PhoneNumber,
+                    Email = userVM.Email,
+                    FullName = userVM.FullName,
+                    EstimatedShipping = cart.EstimatedShipping,
+                    Subtotal = cart.TotalPrice,
+                    Total = cart.TotalWShipFee,
+                    Status = CheckOutStatus.Waiting.ToString(),
+                    BuyDate = DateTime.Now,
+                });
+                await _context.SaveChangesAsync();
+                HttpContext.Session.Clear();
+                return Redirect(returnUrl);
             }
 
             return View(userVM);

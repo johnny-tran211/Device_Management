@@ -29,7 +29,7 @@
                         <div class="product_img"> <img class="img-responsive" src="~/image/@item.Image" alt=""> </div>
                         <div class="product_detail_btm">
                             <div class="center">
-                                <h4><a href="#">@item.ProductName</a></h4>
+                                <h4><a asp-controller="Items" asp-action="DetailUser" asp-route-productName="@item.ProductName">@item.ProductName</a></h4>
                             </div>
                             <form asp-action="AddToCart" asp-controller="Cart" aria-hidden="true">
                                 <div style="text-align: center;">
@@ -39,6 +39,7 @@
                                     <input type="number" min="1" value="1" name="quantity" />
                                 </div>
                                 <input type="hidden" name="ProductName" value="@item.ProductName" />
+                                <input type="hidden" name="Image" value="@item.Image" />
                                 <input type="hidden" name="returnUrl" value="@Url.Action("AllItems","CustomerIndex", new { pageIndex = Model.pageSize})" />
                                 <div class="starratin" style="margin-top: 10px">
                                     <div class="center">

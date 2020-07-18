@@ -17,5 +17,6 @@ namespace DeviceManager.Interface
         void RemoveCart();
 
         CartList ChangeObjToCartList(List<CartObject> cartObject);
+        Guid GetGuid();
     }
 }
